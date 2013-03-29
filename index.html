@@ -16,25 +16,16 @@
     <div id="container" class="container" >
       <h1>FilterClasses</h1>
       <div id="filters" style="width:100%">
-        
-        <div class="span3 filter-elem dropdown" style="float:right">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Add Filter<b class="caret"></b></a>
+        <div class="filter-elem dropdown" style="float:right">
+          <a class="dropdown-toggle" data-toggle="dropdown" href="#">Add AND Filter<b class="caret"></b></a>
           <ul class="dropdown-menu" role="menu" aria-labelledby="dropdown-menu">
             <li><a tabindex=-1>Keyword</a></li>
             <li><a tabindex=-1>GER</a></li>
             <li><a tabindex=-1 onClick="filterSelectorBuilders['subject']();">Subject</a></li>
           </ul></br>
         </div>
-        <!--<div class="btn-group">
-          <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-          <div class="span1 filter-elem" >+</div>
-          </a>
-          <ul class="dropdown-menu">
-            <li><a href="#">Destructive</a></li>
-          </ul>
-        </div>-->
         <div class="filter-column">
-          <div class="filter-elem" onclick="this.remove();">
+          <div class="filter-elem" onclick="this.remove();recalculateWidth();">
             BlahBlahBlah
           </div>
         </div>
@@ -51,11 +42,9 @@
       </div>
   <script type="text/javascript">
     $('.dropdown-toggle').dropdown();
-    
     $("#search").click(function () {
-      filterSelectorBuilders['subject']();
+      //filterSelectorBuilders['subject']();
     });
-    //$("#selectOrder").on('change', function (eventObj) {updateSubjectFilter(0, "CS");});
     recalculateWidth();
     printClasses(classes);
   </script>

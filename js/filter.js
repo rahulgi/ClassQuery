@@ -45,13 +45,22 @@ function buildSubjectSelector (index) {
   var toReturn =  
     '<div class="filter-elem" id="' + index + '">\
       <span>Subject:</span></br>\
-      <select class="selectSubject">\
+      <select onChange="onSubjectSelect(this)" class="selectSubject">\
         <option value=""></option>\
       </select>\
       </div></br>\
-    <div class="filter-elem">\
-    </div>';
+    <div class="filter-elem" onClick="buildOrSubjectSelector(this)">\
+    Add OR Filter</div>';
   return toReturn;
+}
+
+function buildOrSubjectSelector (elem) {
+  var parent = $(elem).parent();
+  var id = parent.attr('id');
+  var index = filterFcns[id].elemIndex ++;
+  $("#" + id).append(buildSubjectSelector(index));
+  populateSubjectDropdown(id, index);
+  elem.remove();
 }
 
 var filterSelectorBuilders = {
@@ -65,17 +74,18 @@ var filterSelectorBuilders = {
       </div>');
     recalculateWidth();
     populateSubjectDropdown(id, 0);
-    $("#" + id).children("#" + index).children(".selectSubject").on("change", function (eventObj) {
-      filterFcns[id].filters[index] = $(this).val();
-      filterClasses();
-    });
   }
 };
 
+function onSubjectSelect (elem) {
+  var id = $(elem).parent().parent().attr('id');
+  var index = $(elem).parent().attr('id');
+  filterFcns[id].filters[index] = $(elem).val();
+  filterClasses();
+}
+
 function fcnBuilder (id, index) {
-  alert (index);
   var toReturn = function (eventObj) {
-    alert (index);
     filterFcns[id].filters[index] = $(this).val();
   };
   return toReturn;
@@ -93,7 +103,7 @@ function recalculateWidth () {
   $("#filters").children().each(function() {
     width += $(this).outerWidth(true);
   });
-  if (width > 940)
+//  if (width > 940)
     $("#container").width(width);
 }
 
