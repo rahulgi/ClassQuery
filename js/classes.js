@@ -1,1 +1,1 @@
-var classes = [{subject:"CS", title:"Operating Systems", code: "CS140"}, {subject:"AA", title:"Niggers in Paris", code: "AANiggaz"}];
+var classes = [{subject:"CS", title:"Operating Systems", code: "CS140"}, {subject:"AA", title:"Greenbeans in Paris", code: "AA432"}];

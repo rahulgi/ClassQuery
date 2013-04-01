@@ -26,14 +26,22 @@ function filterClasses () {
 }
 
 
-
-function buildSubjectFilter (id) {
+function buildKeywordFilter (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
       var regex = new RegExp(arrayFromObject(filters).join("|"));
       for (var i = 0; i < classes.length; i ++) {
-        if (!regex.test(classes[i].subject))
+        var matched = false;
+        for (x in classes[i]) {
+          if (regex.test(classes[i][x])) {
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
           classes.splice(i, 1);
+          i--;
+        }
       }
     },
     filters: {},
@@ -41,11 +49,29 @@ function buildSubjectFilter (id) {
   };
 }
 
-function buildSubjectSelector (index) {
+
+var buildSubjectFilter = function (id) {
+  filterFcns[id] = {
+    fcn: function (classes, filters) {
+      var regex = new RegExp(arrayFromObject(filters).join("|"));
+      for (var i = 0; i < classes.length; i ++) {
+        if (!regex.test(classes[i].subject)) {
+          classes.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    filters: {},
+    elemIndex: 0
+  };
+}
+
+
+var buildSubjectSelector = function (index) {
   var toReturn =  
     '<div class="filter-elem" id="' + index + '">\
       <span>Subject:</span></br>\
-      <select onChange="onSubjectSelect(this)" class="selectSubject">\
+      <select onChange="onElemValueChanged(this)" class="selectSubject">\
         <option value=""></option>\
       </select>\
       </div></br>\
@@ -54,42 +80,73 @@ function buildSubjectSelector (index) {
   return toReturn;
 }
 
-function buildOrSubjectSelector (elem) {
+
+var buildKeywordInput = function (index) {
+  var toReturn = 
+    '<div class="filter-elem" id="' + index + '">\
+      <span>Keyword:</span></br>\
+      <input onFocusOut="onElemValueChanged(this);"></input></br>\
+      <button style="float:right;">Search</button>\
+    </div></br>\
+    <div class="filter-elem" onClick="buildOrElem (this, buildKeywordInput);">\
+    Add OR Filter</div>';
+  return toReturn;
+}
+
+
+function buildOrElem (elem, elemBuilder) {
   var parent = $(elem).parent();
   var id = parent.attr('id');
   var index = filterFcns[id].elemIndex ++;
-  $("#" + id).append(buildSubjectSelector(index));
-  populateSubjectDropdown(id, index);
+  $("#" + id).append(elemBuilder(index));
   elem.remove();
+  return {"id": id, "index": index};
 }
+
+function buildOrSubjectSelector (elem) {
+  var newElem = buildOrElem(elem, buildSubjectSelector);
+  populateSubjectDropdown(newElem.id, newElem.index);
+}
+
 
 var filterSelectorBuilders = {
   subject: function () {
-    var id = (new Date()).getTime();
-    buildSubjectFilter(id);
-    var index = filterFcns[id].elemIndex ++;
-    $("#filters").append(
-      '<div class="filter-column" id="' + id + '">\
-        ' + buildSubjectSelector(index) + '\
-      </div>');
-    recalculateWidth();
+    var id = buildFilterElem(buildSubjectFilter, buildSubjectSelector);
     populateSubjectDropdown(id, 0);
+  },
+  keyword: function () {
+    buildFilterElem(buildKeywordFilter, buildKeywordInput);
   }
 };
 
-function onSubjectSelect (elem) {
+function buildFilterElem (buildFilterFcn, buildFilterElemFcn) {
+  var id = (new Date()).getTime();
+    buildFilterFcn(id);
+    var index = filterFcns[id].elemIndex ++;
+    $("#filters").append(
+      '<div class="filter-column" id="' + id + '">\
+        ' + buildFilterElemFcn(index) + '\
+      </div>');
+    recalculateWidth();
+    return id;
+}
+
+function onElemValueChanged (elem) {
   var id = $(elem).parent().parent().attr('id');
   var index = $(elem).parent().attr('id');
   filterFcns[id].filters[index] = $(elem).val();
   filterClasses();
 }
 
+
+/*
 function fcnBuilder (id, index) {
   var toReturn = function (eventObj) {
     filterFcns[id].filters[index] = $(this).val();
   };
   return toReturn;
 }
+*/
 
 function populateSubjectDropdown (id, index) {
   var elem = $("#" + id).children("#" + index).children(".selectSubject");
@@ -98,6 +155,8 @@ function populateSubjectDropdown (id, index) {
   }
 }
 
+
+/* Recalculates width of the filters block. This should never wrap, even if it forces scrolling. */
 function recalculateWidth () {
   var width = 0;
   $("#filters").children().each(function() {
@@ -106,6 +165,7 @@ function recalculateWidth () {
 //  if (width > 940)
     $("#container").width(width);
 }
+
 
 /* Helper function that creates an array with the values in the object. */
 function arrayFromObject (obj) {
