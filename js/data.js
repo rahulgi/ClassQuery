@@ -17,3 +17,6 @@ var subjectCodes = [
   'MCP', 'NBIO', 'NENS', 'NEPR', 'NSUR', 'OBGYN', 'OPHT', 'ORTHO', 'OTOHNS', 'PATH', 'PEDS', 'PSYC', 'RADO',
   'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
 ];
+
+var gers = ["DB:Hum", "DB:Math", "DB:SocSci", "DB:EngrAppSci", "DB:NatSci", "EC:EthicReas", "EC:GlobalCom", 
+  "EC:AmerCul", "EC:Gender", "IHUM1", "IHUM2", "IHUM3", "Language", "Writing 1", "Writing 2", "Writing SLE"]

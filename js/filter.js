@@ -5,13 +5,14 @@ var filterFcns = {};
   function fcn;
   {} filters;
   int elemIndex
+  int elemCount
 }
 */
 
 function printClasses (classes) {
   var classesContent = "";
   for (var i = 0; i < classes.length; i ++) {
-    classesContent += "<span><strong>" + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
+    classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
   }
   $("#filteredClasses").html(classesContent);
 }
@@ -29,7 +30,7 @@ function filterClasses () {
 function buildKeywordFilter (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
-      var regex = new RegExp(arrayFromObject(filters).join("|"));
+      var regex = new RegExp(arrayFromObject(filters).join("|"), "i");
       for (var i = 0; i < classes.length; i ++) {
         var matched = false;
         for (x in classes[i]) {
@@ -53,9 +54,37 @@ function buildKeywordFilter (id) {
 var buildSubjectFilter = function (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
-      var regex = new RegExp(arrayFromObject(filters).join("|"));
+      var regex = new RegExp("^(" + arrayFromObject(filters).join("|") + ")$");
       for (var i = 0; i < classes.length; i ++) {
         if (!regex.test(classes[i].subject)) {
+          classes.splice(i, 1);
+          i--;
+        }
+      }
+    },
+    filters: {},
+    elemIndex: 0
+  };
+}
+
+var buildGERFilter = function (id) {
+  filterFcns[id] = {
+    fcn: function (classes, filters) {
+      console.log(filters);
+      var regex = new RegExp("GER:(" + arrayFromObject(filters).map(function(elem) 
+        {
+          return elem.replace(":", "");
+        }).join("|") + ")");
+      for (var i = 0; i < classes.length; i ++) {
+        var matched = false;
+        for (var x = 0; x < classes[i]['gers'].length; x++) {
+          if (regex.test(classes[i]['gers'][x])) {
+            
+            matched = true;
+            break;
+          }
+        }
+        if (!matched) {
           classes.splice(i, 1);
           i--;
         }
@@ -70,12 +99,28 @@ var buildSubjectFilter = function (id) {
 var buildSubjectSelector = function (index) {
   var toReturn =  
     '<div class="filter-elem" id="' + index + '">\
+      <button class="close" onClick="onElemRemoved(this);">&times;</button>\
       <span>Subject:</span></br>\
-      <select onChange="onElemValueChanged(this)" class="selectSubject">\
+      <select onChange="onElemValueChanged(this)" class="selector">\
         <option value=""></option>\
       </select>\
       </div></br>\
-    <div class="filter-elem" onClick="buildOrSubjectSelector(this)">\
+    <div class="filter-elem" onClick="buildOrSelector(this, buildSubjectSelector, subjectCodes)">\
+    Add OR Filter</div>';
+  return toReturn;
+}
+
+
+var buildGERSelector = function (index) {
+  var toReturn =  
+    '<div class="filter-elem" id="' + index + '">\
+      <button class="close" onClick="onElemRemoved(this);">&times;</button>\
+      <span>GER:</span></br>\
+      <select onChange="onElemValueChanged(this)" class="selector">\
+        <option value=""></option>\
+      </select>\
+      </div></br>\
+    <div class="filter-elem" onClick="buildOrSelector(this, buildGERSelector, gers)">\
     Add OR Filter</div>';
   return toReturn;
 }
@@ -84,6 +129,7 @@ var buildSubjectSelector = function (index) {
 var buildKeywordInput = function (index) {
   var toReturn = 
     '<div class="filter-elem" id="' + index + '">\
+      <button class="close" onClick="onElemRemoved(this);">&times;</button>\
       <span>Keyword:</span></br>\
       <input onFocusOut="onElemValueChanged(this);"></input></br>\
       <button style="float:right;">Search</button>\
@@ -98,24 +144,29 @@ function buildOrElem (elem, elemBuilder) {
   var parent = $(elem).parent();
   var id = parent.attr('id');
   var index = filterFcns[id].elemIndex ++;
+  filterFcns[id].elemCount ++;
   $("#" + id).append(elemBuilder(index));
   elem.remove();
   return {"id": id, "index": index};
 }
 
-function buildOrSubjectSelector (elem) {
-  var newElem = buildOrElem(elem, buildSubjectSelector);
-  populateSubjectDropdown(newElem.id, newElem.index);
+function buildOrSelector (elem, builder, arr) {
+  var newElem = buildOrElem(elem, builder);
+  populateSelectorDropdown(newElem.id, newElem.index, arr);
 }
 
 
 var filterSelectorBuilders = {
   subject: function () {
     var id = buildFilterElem(buildSubjectFilter, buildSubjectSelector);
-    populateSubjectDropdown(id, 0);
+    populateSelectorDropdown(id, 0, subjectCodes);
   },
   keyword: function () {
     buildFilterElem(buildKeywordFilter, buildKeywordInput);
+  },
+  gers: function () {
+    var id = buildFilterElem(buildGERFilter, buildGERSelector);
+    populateSelectorDropdown(id, 0, gers);
   }
 };
 
@@ -127,6 +178,7 @@ function buildFilterElem (buildFilterFcn, buildFilterElemFcn) {
       '<div class="filter-column" id="' + id + '">\
         ' + buildFilterElemFcn(index) + '\
       </div>');
+    filterFcns[id].elemCount = 1;
     recalculateWidth();
     return id;
 }
@@ -139,6 +191,20 @@ function onElemValueChanged (elem) {
 }
 
 
+function onElemRemoved (elem) {
+  var id = $(elem).parent().parent().attr('id');
+  var index = $(elem).parent().attr('id');
+  delete filterFcns[id].filters[index];
+  if (--filterFcns[id].elemCount == 0) {
+    $(elem).parent().parent().remove();
+    recalculateWidth();
+  }
+  else
+    $(elem).parent().remove();
+  filterClasses;
+}
+
+
 /*
 function fcnBuilder (id, index) {
   var toReturn = function (eventObj) {
@@ -148,10 +214,11 @@ function fcnBuilder (id, index) {
 }
 */
 
-function populateSubjectDropdown (id, index) {
-  var elem = $("#" + id).children("#" + index).children(".selectSubject");
-  for (var i = 0; i < subjectCodes.length; i ++) {
-    elem.append("<option value='" + subjectCodes[i] + "'>" + subjectCodes[i] + "</option>");
+
+function populateSelectorDropdown (id, index, arr) {
+  var elem = $("#" + id).children("#" + index).children(".selector");
+  for (var i = 0; i < arr.length; i ++) {
+    elem.append("<option value='" + arr[i] + "'>" + arr[i] + "</option>");
   }
 }
 
