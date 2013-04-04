@@ -20,6 +20,8 @@ function printClasses (classes) {
 /* Create a new copy of the classes list and apply every filter to it. */
 function filterClasses () {
   var classesCpy = classes.slice(0);
+  /*for (var i = 0; i < classes.length, i++)
+    classes[i].present = true;*/
   for (x in filterFcns) {
     filterFcns[x].fcn(classesCpy, filterFcns[x].filters);
   }
@@ -70,7 +72,6 @@ var buildSubjectFilter = function (id) {
 var buildGERFilter = function (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
-      console.log(filters);
       var regex = new RegExp("GER:(" + arrayFromObject(filters).map(function(elem) 
         {
           return elem.replace(":", "");
@@ -78,8 +79,7 @@ var buildGERFilter = function (id) {
       for (var i = 0; i < classes.length; i ++) {
         var matched = false;
         for (var x = 0; x < classes[i]['gers'].length; x++) {
-          if (regex.test(classes[i]['gers'][x])) {
-            
+          if (regex.test(classes[i]['gers'][x])) {            
             matched = true;
             break;
           }
@@ -197,22 +197,13 @@ function onElemRemoved (elem) {
   delete filterFcns[id].filters[index];
   if (--filterFcns[id].elemCount == 0) {
     $(elem).parent().parent().remove();
+    delete filterFcns[id];
     recalculateWidth();
   }
   else
     $(elem).parent().remove();
-  filterClasses;
+  filterClasses();
 }
-
-
-/*
-function fcnBuilder (id, index) {
-  var toReturn = function (eventObj) {
-    filterFcns[id].filters[index] = $(this).val();
-  };
-  return toReturn;
-}
-*/
 
 
 function populateSelectorDropdown (id, index, arr) {
