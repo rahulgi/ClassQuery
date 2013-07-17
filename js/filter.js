@@ -200,8 +200,10 @@ function onElemRemoved (elem) {
     delete filterFcns[id];
     recalculateWidth();
   }
-  else
+  else {
+    $(elem).parent().next().remove();
     $(elem).parent().remove();
+  }
   filterClasses();
 }
 
