@@ -12,20 +12,21 @@ var filterFcns = {};
 function printClasses (classes) {
   var classesContent = "";
   for (var i = 0; i < classes.length; i ++) {
-    classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
+    if (classes[i].present)
+      classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
   }
   $("#filteredClasses").html(classesContent);
 }
 
 /* Create a new copy of the classes list and apply every filter to it. */
 function filterClasses () {
-  var classesCpy = classes.slice(0);
-  /*for (var i = 0; i < classes.length, i++)
-    classes[i].present = true;*/
+  //var classesCpy = classes.slice(0);
+  for (var i = 0; i < classes.length; i++)
+    classes[i].present = true;
   for (x in filterFcns) {
-    filterFcns[x].fcn(classesCpy, filterFcns[x].filters);
+    filterFcns[x].fcn(classes, filterFcns[x].filters);
   }
-  printClasses(classesCpy);
+  printClasses(classes);
 }
 
 
@@ -42,8 +43,9 @@ function buildKeywordFilter (id) {
           }
         }
         if (!matched) {
-          classes.splice(i, 1);
-          i--;
+          classes[i].present = false;
+          //classes.splice(i, 1);
+          //i--;
         }
       }
     },
@@ -59,8 +61,9 @@ var buildSubjectFilter = function (id) {
       var regex = new RegExp("^(" + arrayFromObject(filters).join("|") + ")$");
       for (var i = 0; i < classes.length; i ++) {
         if (!regex.test(classes[i].subject)) {
-          classes.splice(i, 1);
-          i--;
+          classes[i].present = false;
+          //classes.splice(i, 1);
+          //i--;
         }
       }
     },
@@ -72,7 +75,7 @@ var buildSubjectFilter = function (id) {
 var buildGERFilter = function (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
-      var regex = new RegExp("GER:(" + arrayFromObject(filters).map(function(elem) 
+      var regex = new RegExp("?(GER:)(" + arrayFromObject(filters).map(function(elem) 
         {
           return elem.replace(":", "");
         }).join("|") + ")");
@@ -85,8 +88,9 @@ var buildGERFilter = function (id) {
           }
         }
         if (!matched) {
-          classes.splice(i, 1);
-          i--;
+          classes[i].present = false;
+          //classes.splice(i, 1);
+          //i--;
         }
       }
     },
