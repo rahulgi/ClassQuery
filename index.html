@@ -4,11 +4,10 @@
   <title>ClassQuery</title>
   <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css" type="text/css">
   <link rel="stylesheet" href="css/styles.css" type="text/css">
-  <!-- Place scripts at bottom to allow progressive rendering (I.E. have elements 
+  <!-- Place scripts at bottom to allow progressive rendering (I.E. have elements
        render while downloading script.) -->
   <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
-  <script type="text/javascript" src="js/coursesElem.js"></script>
   <script type="text/javascript" src="js/data.js"></script>
   <script type="text/javascript" src="js/filter.js"></script>
 </head>
@@ -34,9 +33,12 @@
     </div>
   </div>
   <script type="text/javascript">
-    $('.dropdown-toggle').dropdown();
-    recalculateWidth();
-    printClasses(classes);
+    function initialize() {
+      $('.dropdown-toggle').dropdown();
+      recalculateWidth();
+      printClasses(classes);
+    }
   </script>
+  <script type="text/javascript" src="js/coursesElem.js"></script>
 </body>
 </html>

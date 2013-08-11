@@ -8,6 +8,9 @@ var filterFcns = {};
   int elemCount
 }
 */
+/* To build a new filter, the following elements are required:
+
+*/
 
 function printClasses (classes) {
   var classesContent = "";
@@ -15,12 +18,11 @@ function printClasses (classes) {
     if (classes[i].present)
       classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
   }
-  $("#filteredClasses").html(classesContent);
+  $("#filteredClasses").empty().html(classesContent);
 }
 
 /* Create a new copy of the classes list and apply every filter to it. */
 function filterClasses () {
-  //var classesCpy = classes.slice(0);
   for (var i = 0; i < classes.length; i++)
     classes[i].present = true;
   for (x in filterFcns) {
@@ -75,14 +77,14 @@ var buildSubjectFilter = function (id) {
 var buildGERFilter = function (id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
-      var regex = new RegExp("?(GER:)(" + arrayFromObject(filters).map(function(elem) 
+      var regex = new RegExp("(GER:)?(" + arrayFromObject(filters).map(function(elem)
         {
           return elem.replace(":", "");
         }).join("|") + ")");
       for (var i = 0; i < classes.length; i ++) {
         var matched = false;
         for (var x = 0; x < classes[i]['gers'].length; x++) {
-          if (regex.test(classes[i]['gers'][x])) {            
+          if (regex.test(classes[i]['gers'][x])) {
             matched = true;
             break;
           }
@@ -101,7 +103,7 @@ var buildGERFilter = function (id) {
 
 
 var buildSubjectSelector = function (index) {
-  var toReturn =  
+  var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
       <span>Subject:</span></br>\
@@ -116,7 +118,7 @@ var buildSubjectSelector = function (index) {
 
 
 var buildGERSelector = function (index) {
-  var toReturn =  
+  var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
       <span>GER:</span></br>\
@@ -131,7 +133,7 @@ var buildGERSelector = function (index) {
 
 
 var buildKeywordInput = function (index) {
-  var toReturn = 
+  var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
       <span>Keyword:</span></br>\
@@ -235,7 +237,7 @@ function recalculateWidth () {
 function arrayFromObject (obj) {
   var i = 0;
   var toReturn = [];
-  for (x in obj) 
+  for (x in obj)
     toReturn[i++] = obj[x];
   return toReturn;
 }

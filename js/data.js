@@ -11,12 +11,13 @@ var subjectCodes = [
   'IPS', 'INTNLREL', 'ITALGEN', 'ITALLANG', 'ITALLIT', 'JAPANGEN', 'JAPANLNG', 'JAPANLIT', 'JEWISHST', 'KORGEN',
   'KORLANG', 'LATINAM', 'LINGUIST', 'MCS', 'MATH', 'MEDVLST', 'MTL', 'MUSIC', 'NATIVEAM', 'PHIL', 'PHYSICS',
   'POLISCI', 'PORTLANG', 'PSYCH', 'PUBLPOL', 'RELIGST', 'REES', 'STS', 'SLAVGEN', 'SLAVLANG', 'SLAVLIT', 'SOC',
-  'SPANLANG', 'ILAC', 'SPECLANG', 'STATS', 'SYMSYS', 'TIBETLNG', 'URBANST', 'ACCT', 'MGTECON', 'FINANCE', 
+  'SPANLANG', 'ILAC', 'SPECLANG', 'STATS', 'SYMSYS', 'TIBETLNG', 'URBANST', 'ACCT', 'MGTECON', 'FINANCE',
   'GSBGEN', 'HRMGT', 'MKTG', 'OIT', 'OB', 'POLECON', 'STRAMGT', 'LAW', 'LAWGEN', 'ANES', 'BIOC', 'BIOMEDIN',
   'CBIO', 'CTS', 'CSB', 'COMPMED', 'DERM', 'DBIO', 'FAMMED', 'GENE', 'HRP', 'IMMUNOL', 'MED', 'INDE', 'MI',
   'MCP', 'NBIO', 'NENS', 'NEPR', 'NSUR', 'OBGYN', 'OPHT', 'ORTHO', 'OTOHNS', 'PATH', 'PEDS', 'PSYC', 'RADO',
   'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
 ];
 
-var gers = ["DB:Hum", "DB:Math", "DB:SocSci", "DB:EngrAppSci", "DB:NatSci", "EC:EthicReas", "EC:GlobalCom", 
-  "EC:AmerCul", "EC:Gender", "IHUM1", "IHUM2", "IHUM3", "Language", "Writing 1", "Writing 2", "Writing SLE"]
+var gers = ["DB:Hum", "DB:Math", "DB:SocSci", "DB:EngrAppSci", "DB:NatSci", "EC:EthicReas", "EC:GlobalCom",
+  "EC:AmerCul", "EC:Gender", "Language", "Writing 1", "Writing 2", "Writing SLE", 'WAY-All', 'WAY-AQR', 'WAY-CE',
+  'WAY-ED', 'WAY-ER', 'WAY-FR', 'WAY-SI', 'WAY-SMA'];
