@@ -6,28 +6,26 @@ var http = require('http')
   // , data = require('./public/javascripts/data')
   //, Course = require('./models/Course');
 
-// var subjectCodes = ['EARTHSCI'];//d1ata.subject_codes;
-
-// var subjectCodes = [
-//   'EARTHSCI', 'EARTHSYS', 'EEES', 'ENERGY', 'ENVRES', 'EESS', 'GES', 'GEOPHYS', 'ENVRINST', 'EDUC', 'AA',
-//   'BIOE', 'CHEMENG', 'CEE', 'CME', 'CS', 'EE', 'ENGR', 'MS%26E', 'MATSCI', 'ME', 'SCCM', 'AFRICAAM', 'AMELANG',
-//   'AFRICAST', 'AMSTUD', 'ANTHRO', 'APPPHYS', 'ARCHLGY', 'ARTHIST', 'ARTSTUDI', 'ASNAMST', 'ASNLANG', 'ASTRNMY',
-//   'ATHLETIC', 'BIO', 'BIOPHYS', 'CATLANG', 'CHEM', 'CHICANST', 'CHINGEN', 'CHINLANG', 'CHINLIT', 'CLASSART',
-//   'CLASSGEN', 'CLASSGRK', 'CLASSHIS', 'CLASSLAT', 'COMM', 'COMPLIT', 'CSRE', 'DANCE', 'DLCL', 'DRAMA', 'EASTASN',
-//   'ECON', 'ENGLISH', 'EFSLANG', 'ETHICSOC', 'FEMST', 'FILMPROD', 'FILMSTUD', 'FRENGEN', 'FRENLANG', 'FRENLIT',
-//   'GERGEN', 'GERLANG', 'GERLIT', 'HISTORY', 'HPS', 'HUMBIO', 'HUMSCI', 'ILAC', 'IBERLANG', 'IIS', 'HUMNTIES',
-//   'IPS', 'INTNLREL', 'ITALGEN', 'ITALLANG', 'ITALLIT', 'JAPANGEN', 'JAPANLNG', 'JAPANLIT', 'JEWISHST', 'KORGEN',
-//   'KORLANG', 'LATINAM', 'LINGUIST', 'MCS', 'MATH', 'MEDVLST', 'MTL', 'MUSIC', 'NATIVEAM', 'PHIL', 'PHYSICS',
-//   'POLISCI', 'PORTLANG', 'PSYCH', 'PUBLPOL', 'RELIGST', 'REES', 'STS', 'SLAVGEN', 'SLAVLANG', 'SLAVLIT', 'SOC',
-//   'SPANLANG', 'ILAC', 'SPECLANG', 'STATS', 'SYMSYS', 'TIBETLNG', 'URBANST', 'ACCT', 'MGTECON', 'FINANCE',
-//   'GSBGEN', 'HRMGT', 'MKTG', 'OIT', 'OB', 'POLECON', 'STRAMGT', 'LAW', 'LAWGEN', 'ANES', 'BIOC', 'BIOMEDIN',
-//   'CBIO', 'CTS', 'CSB', 'COMPMED', 'DERM', 'DBIO', 'FAMMED', 'GENE', 'HRP', 'IMMUNOL', 'MED', 'INDE', 'MI',
-//   'MCP', 'NBIO', 'NENS', 'NEPR', 'NSUR', 'OBGYN', 'OPHT', 'ORTHO', 'OTOHNS', 'PATH', 'PEDS', 'PSYC', 'RADO',
-//   'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
-// ];
+var subjectCodes = [
+  'EARTHSCI', 'EARTHSYS', 'EEES', 'ENERGY', 'ENVRES', 'EESS', 'GES', 'GEOPHYS', 'ENVRINST', 'EDUC', 'AA',
+  'BIOE', 'CHEMENG', 'CEE', 'CME', 'CS', 'EE', 'ENGR', 'MS%26E', 'MATSCI', 'ME', 'SCCM', 'AFRICAAM', 'AMELANG',
+  'AFRICAST', 'AMSTUD', 'ANTHRO', 'APPPHYS', 'ARCHLGY', 'ARTHIST', 'ARTSTUDI', 'ASNAMST', 'ASNLANG', 'ASTRNMY',
+  'ATHLETIC', 'BIO', 'BIOPHYS', 'CATLANG', 'CHEM', 'CHICANST', 'CHINGEN', 'CHINLANG', 'CHINLIT', 'CLASSART',
+  'CLASSGEN', 'CLASSGRK', 'CLASSHIS', 'CLASSLAT', 'COMM', 'COMPLIT', 'CSRE', 'DANCE', 'DLCL', 'DRAMA', 'EASTASN',
+  'ECON', 'ENGLISH', 'EFSLANG', 'ETHICSOC', 'FEMST', 'FILMPROD', 'FILMSTUD', 'FRENGEN', 'FRENLANG', 'FRENLIT',
+  'GERGEN', 'GERLANG', 'GERLIT', 'HISTORY', 'HPS', 'HUMBIO', 'HUMSCI', 'ILAC', 'IBERLANG', 'IIS', 'HUMNTIES',
+  'IPS', 'INTNLREL', 'ITALGEN', 'ITALLANG', 'ITALLIT', 'JAPANGEN', 'JAPANLNG', 'JAPANLIT', 'JEWISHST', 'KORGEN',
+  'KORLANG', 'LATINAM', 'LINGUIST', 'MCS', 'MATH', 'MEDVLST', 'MTL', 'MUSIC', 'NATIVEAM', 'PHIL', 'PHYSICS',
+  'POLISCI', 'PORTLANG', 'PSYCH', 'PUBLPOL', 'RELIGST', 'REES', 'STS', 'SLAVGEN', 'SLAVLANG', 'SLAVLIT', 'SOC',
+  'SPANLANG', 'ILAC', 'SPECLANG', 'STATS', 'SYMSYS', 'TIBETLNG', 'URBANST', 'ACCT', 'MGTECON', 'FINANCE',
+  'GSBGEN', 'HRMGT', 'MKTG', 'OIT', 'OB', 'POLECON', 'STRAMGT', 'LAW', 'LAWGEN', 'ANES', 'BIOC', 'BIOMEDIN',
+  'CBIO', 'CTS', 'CSB', 'COMPMED', 'DERM', 'DBIO', 'FAMMED', 'GENE', 'HRP', 'IMMUNOL', 'MED', 'INDE', 'MI',
+  'MCP', 'NBIO', 'NENS', 'NEPR', 'NSUR', 'OBGYN', 'OPHT', 'ORTHO', 'OTOHNS', 'PATH', 'PEDS', 'PSYC', 'RADO',
+  'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
+];
 
 // DEBUG
-var subjectCodes = ['MATH'];
+// var subjectCodes = ['EARTHSCI', 'MATH'];
 
 var lectureCode = 'LEC';
 
@@ -110,7 +108,20 @@ function parse_result (result) {
     sectionsCounter += sections.length;
     coursesCounter --;
 
-    checkBeginNext ();
+    // checkBeginNext ();
+
+    var newCourse = {};
+    newCourse.subject = course['subject'][0];
+    newCourse.code = course['code'][0];
+    newCourse.title = course['title'][0];
+    newCourse.description = course['description'][0];
+    newCourse.units = course['unitsMax'][0]
+    newCourse.sections = []
+
+    if (typeof course['gers'][0] === "string")
+      newCourse.gers = course['gers'][0].split(', ');
+    else
+      newCourse.gers = [];
 
     sections.map (function (section) {
       sectionsCounter --;
@@ -119,14 +130,20 @@ function parse_result (result) {
         return;
       }*/
 
-      var schedules = utils.getArrayOfObjects(section['schedules'][0]['schedule']);
+      var newSection = {};
+      newSection.schedules = [];
 
+      var schedules = utils.getArrayOfObjects(section['schedules'][0]['schedule']);
       schedulesCounter += schedules.length;
 
-      checkBeginNext();
+      // checkBeginNext();
 
       schedules.map(function(schedule) {
+
+        var newSchedule = {};
+
         var location = schedule['location'][0];
+        newSchedule.location = location;
 
         // This checks if there is no location or no days associated with a course, meaning it
         // will never be displayed and is thus wasted space.
@@ -136,51 +153,40 @@ function parse_result (result) {
           return;
         }*/
 
-        var newCourse = {};
-        newCourse.subject = course['subject'][0];
-        newCourse.code = course['code'][0];
-        newCourse.title = course['title'][0];
-        newCourse.description = course['description'][0];
-        newCourse.units = course['unitsMax'][0]
-
-        if (typeof course['gers'][0] === "string")
-          newCourse.gers = course['gers'][0].split(', ');
-        else
-          newCourse.gers = [];
-
-        newCourse.instructors = [];
-        newCourse.days = [];
+        newSchedule.instructors = [];
+        newSchedule.days = [];
 
         var instructors = utils.getArrayOfObjects(section['instructor']);
         instructors.map(function(instructor) {
           // console.log("pushing instructors");
-          newCourse.instructors.push(instructor['name'][0]);
+          newSchedule.instructors.push(instructor['name'][0]);
         });
 
         var days = utils.getObject(schedule['days'][0]).trim();
         if (days.length > 0) {
           days.split(/\W+/).map(function(day) {
-            newCourse.days.push(day);
+            newSchedule.days.push(day);
           });
         }
 
-        newCourse.startTime = schedule['startTime'][0];
-        newCourse.endTime = schedule['endTime'][0];
-        newCourse.startDate = schedule['startDate'][0];
-        newCourse.endDate = schedule['endDate'][0];
-
-        newCourse.location = location;
+        newSchedule.startTime = schedule['startTime'][0];
+        newSchedule.endTime = schedule['endTime'][0];
+        newSchedule.startDate = schedule['startDate'][0];
+        newSchedule.endDate = schedule['endDate'][0];
 
         // This seems to be true for a bunch of random project courses that we don't want to include
         // if (typeof newCourse.description !== 'object') {
-          allCourses.push (newCourse);
+        newSection.schedules.push(newSchedule);
         // }
 
         --schedulesCounter;
         // console.log("No more schedules...");
-        checkBeginNext ();
+
       }); // schedules
+      newCourse.sections.push(newSection);
     }); // sections
+    allCourses.push(newCourse)
+    checkBeginNext ();
   }); // courses
 }
 
