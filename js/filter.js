@@ -8,15 +8,19 @@ var filterFcns = {};
   int elemCount
 }
 */
-/* To build a new filter, the following elements are required:
-
-*/
 
 function printClasses (classes) {
   var classesContent = "";
   for (var i = 0; i < classes.length; i ++) {
-    if (classes[i].present)
-      classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br><span>" + classes[i].description + "</span><hr class='featurette-divider'>";
+    if (classes[i].present) {
+      classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br>" +
+      "<span>" + classes[i].description + "</span></br>" + "<span class='muted'>";
+      if (classes[i].minUnits === classes[i].maxUnits)
+        classesContent += classes[i].minUnits;
+      else
+        classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
+      classesContent += " Units</span><hr class='featurette-divider'>";
+    }
   }
   $("#filteredClasses").empty().html(classesContent);
 }
@@ -46,8 +50,6 @@ function buildKeywordFilter (id) {
         }
         if (!matched) {
           classes[i].present = false;
-          //classes.splice(i, 1);
-          //i--;
         }
       }
     },
@@ -57,15 +59,13 @@ function buildKeywordFilter (id) {
 }
 
 
-var buildSubjectFilter = function (id) {
+function buildSubjectFilter(id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
       var regex = new RegExp("^(" + arrayFromObject(filters).join("|") + ")$");
       for (var i = 0; i < classes.length; i ++) {
         if (!regex.test(classes[i].subject)) {
           classes[i].present = false;
-          //classes.splice(i, 1);
-          //i--;
         }
       }
     },
@@ -74,7 +74,7 @@ var buildSubjectFilter = function (id) {
   };
 }
 
-var buildGERFilter = function (id) {
+function buildGERFilter(id) {
   filterFcns[id] = {
     fcn: function (classes, filters) {
       var regex = new RegExp("(GER:)?(" + arrayFromObject(filters).map(function(elem)
@@ -91,8 +91,6 @@ var buildGERFilter = function (id) {
         }
         if (!matched) {
           classes[i].present = false;
-          //classes.splice(i, 1);
-          //i--;
         }
       }
     },
@@ -101,8 +99,27 @@ var buildGERFilter = function (id) {
   };
 }
 
+function buildUnitsFilter (id) {
+  filterFcns[id] = {
+    fcn: function(classes, filters) {
+      for (var i = 0; i < classes.length; ++i) {
+        var matched = false;
+        for (var x in filters) {
+          if ((filters[x] == '>5' && classes[i].maxUnits > 5) || (classes[i].maxUnits >= filters[x] && classes[i].minUnits <= filters[x]))
+            matched = true;
+            break;
+        }
+        if (!matched)
+          classes[i].present = false;
+      }
+    },
+    filters: {},
+    elemIndex: 0
+  };
+}
 
-var buildSubjectSelector = function (index) {
+
+function buildSubjectSelector (index) {
   var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
@@ -117,7 +134,7 @@ var buildSubjectSelector = function (index) {
 }
 
 
-var buildGERSelector = function (index) {
+function buildGERSelector (index) {
   var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
@@ -132,7 +149,7 @@ var buildGERSelector = function (index) {
 }
 
 
-var buildKeywordInput = function (index) {
+function buildKeywordInput (index) {
   var toReturn =
     '<div class="filter-elem" id="' + index + '">\
       <button class="close" onClick="onElemRemoved(this);">&times;</button>\
@@ -140,7 +157,21 @@ var buildKeywordInput = function (index) {
       <input onFocusOut="onElemValueChanged(this);"></input></br>\
       <button style="float:right;">Search</button>\
     </div></br>\
-    <div class="filter-elem" onClick="buildOrElem (this, buildKeywordInput);">\
+    <div class="filter-elem" onClick="buildOrElem(this, buildKeywordInput);">\
+    Add OR Filter</div>';
+  return toReturn;
+}
+
+function buildUnitsSelector(index) {
+  var toReturn =
+    '<div class="filter-elem" id="' + index + '">\
+      <button class="close" onClick="onElemRemoved(this);">&times;</button>\
+      <span>Units:</span></br>\
+      <select onChange="onElemValueChanged(this)" class="selector">\
+        <option value=""></option>\
+      </select>\
+      </div></br>\
+    <div class="filter-elem" onClick="buildOrSelector(this, buildUnitsSelector, units)">\
     Add OR Filter</div>';
   return toReturn;
 }
@@ -173,6 +204,10 @@ var filterSelectorBuilders = {
   gers: function () {
     var id = buildFilterElem(buildGERFilter, buildGERSelector);
     populateSelectorDropdown(id, 0, gers);
+  },
+  units: function() {
+    var id = buildFilterElem(buildUnitsFilter, buildUnitsSelector);
+    populateSelectorDropdown(id, 0, units);
   }
 };
 
