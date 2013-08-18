@@ -23,10 +23,12 @@ function printClasses (classes) {
     }
   }
   $("#filteredClasses").empty().html(classesContent);
+  hideLoader();
 }
 
 /* Create a new copy of the classes list and apply every filter to it. */
 function filterClasses () {
+  showLoader();
   for (var i = 0; i < classes.length; i++)
     classes[i].present = true;
   for (x in filterFcns) {
@@ -35,6 +37,15 @@ function filterClasses () {
   printClasses(classes);
 }
 
+function showLoader() {
+  $('#filteredClasses').hide();
+  $('#loader').show();
+}
+
+function hideLoader() {
+  $('#loader').hide();
+  $('#filteredClasses').show();
+}
 
 function buildKeywordFilter (id) {
   filterFcns[id] = {
