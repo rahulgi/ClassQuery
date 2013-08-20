@@ -2,7 +2,8 @@ var http = require('http')
   , xml2js = require('xml2js')
   , utils = require('./utilities')
   , fs = require('fs')
-  , $ = require('jquery');
+  // , $ = require('jquery')
+  , _ = require('underscore');
   // , data = require('./public/javascripts/data')
   //, Course = require('./models/Course');
 
@@ -24,12 +25,15 @@ var subjectCodes = [
   'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
 ];
 
+var validComponents = [
+  'LEC', 'SEM', 'DIS', 'LAB', 'LBS', 'IDS', 'ISF', 'ISS', 'LNG', 'SCS'
+];
+
 // DEBUG
 // var subjectCodes = ['EARTHSCI', 'MATH'];
 
-var lectureCode = 'LEC';
-
 var allCourses = [];
+var skippedCourses = [];
 
 var index = 0
   , coursesCounter = 0
@@ -41,9 +45,9 @@ var queryForSubject = function (i) {
 
   var options = {
     host: 'explorecourses.stanford.edu',
-    path: '/search?view=xml-20130201&catalog=&page=0&q=' + subjectCodes[i]
+    path: '/search?view=xml-20130201&catalog=&q=' + subjectCodes[i]
       + '&filter-catalognumber-' + subjectCodes[i] + '=on&filter-coursestatus-Active=on'
-      + '&filter-term-Autumn=on' // Restricts to just Autumn Courses
+      // + '&filter-term-Autumn=on' // Restricts to just Autumn Courses
   };
 
   // console.log(options.host + options.path);
@@ -80,17 +84,26 @@ var checkBeginNext = function () {
     if (index < subjectCodes.length) {
       queryForSubject(index);
     } else {
-      console.log('All courses queried! Now exiting...');
+      console.log('All courses queried! Writing files...');
       // console.log(allCourses);
       fs.writeFile("./coursesElem.js",
                    "var classes = " + JSON.stringify(allCourses) + ";initialize();",
                    function (err) {
         if (err)
-          console.log("Err writing file: " + err);
+          console.log("Err writing courses file: " + err);
         else
-          console.log("File written successfully");
-        process.exit(0);
+          console.log("Courses file written successfully...");
+
+        fs.writeFile("./skippedCourses.js", JSON.stringify(skippedCourses), function(err) {
+          if (err)
+            console.log("Err writing skipped courses: " + err);
+          else
+            console.log("Wrote skipped courses succesfully...");
+          console.log("Exiting...")
+          process.exit(0);
+        });
       });
+
     }
   }
 }
@@ -101,7 +114,7 @@ function parse_result (result) {
   coursesCounter = courses.length;
 
   checkBeginNext ();
-  courses.map(function(course) {
+  _.each(courses, function(course) {
     // console.log(" Mapping Courses: Course COunter is " + coursesCounter);
     var sections = utils.getArrayOfObjects(course['sections'][0]['section']);
 
@@ -124,12 +137,11 @@ function parse_result (result) {
     else
       newCourse.gers = [];
 
-    sections.map (function (section) {
+    _.each(sections, function (section) {
       sectionsCounter --;
-      /*if (section['component'] !== lectureCode) {
-        checkBeginNext();
+
+      if (validComponents.indexOf(section['component'][0]) === -1)
         return;
-      }*/
 
       var newSection = {};
       newSection.schedules = [];
@@ -139,7 +151,7 @@ function parse_result (result) {
 
       // checkBeginNext();
 
-      schedules.map(function(schedule) {
+      _.each(schedules, function(schedule) {
 
         var newSchedule = {};
 
@@ -158,14 +170,14 @@ function parse_result (result) {
         newSchedule.days = [];
 
         var instructors = utils.getArrayOfObjects(section['instructor']);
-        instructors.map(function(instructor) {
+        _.each(instructors, function(instructor) {
           // console.log("pushing instructors");
           newSchedule.instructors.push(instructor['name'][0]);
         });
 
         var days = utils.getObject(schedule['days'][0]).trim();
         if (days.length > 0) {
-          days.split(/\W+/).map(function(day) {
+          _.each(days.split(/\W+/), function(day) {
             newSchedule.days.push(day);
           });
         }
@@ -186,7 +198,12 @@ function parse_result (result) {
       }); // schedules
       newCourse.sections.push(newSection);
     }); // sections
-    allCourses.push(newCourse)
+
+    if (newCourse.sections.length > 0)
+      allCourses.push(newCourse)
+    else
+      skippedCourses.push(newCourse)
+
     checkBeginNext ();
   }); // courses
 }
