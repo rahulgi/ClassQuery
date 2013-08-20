@@ -8,6 +8,7 @@
        render while downloading script.) -->
   <script type="text/javascript" src="js/jquery-1.8.2.min.js"></script>
   <script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+  <script type="text/javascript" src="js/underscore-min.js"></script>
   <script type="text/javascript" src="js/data.js"></script>
   <script type="text/javascript" src="js/filter.js"></script>
 </head>
@@ -28,6 +29,10 @@
       </div>
     </div>
     <hr class="featurette-divider">
+    <div class="container">
+      <h4 id="currentQuery"></h4>
+    </div>
+    <hr class="featurette-divider">
   </div>
   <div id='loader'>
   </div>
@@ -40,6 +45,7 @@
       $('.dropdown-toggle').dropdown();
       recalculateWidth();
       printClasses(classes);
+      printCurrentQuery();
     }
   </script>
   <script type="text/javascript" src="js/coursesElem.js"></script>

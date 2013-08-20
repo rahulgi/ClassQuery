@@ -192,6 +192,9 @@ function parse_result (result) {
         newSection.schedules.push(newSchedule);
         // }
 
+        if (newSection.schedules.length > 1)
+          console.log(newCourse.title)
+
         --schedulesCounter;
         // console.log("No more schedules...");
 

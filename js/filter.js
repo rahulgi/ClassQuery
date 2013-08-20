@@ -11,20 +11,39 @@ var filterFcns = {};
 
 function printClasses (classes) {
   var classesContent = "";
-  for (var i = 0; i < classes.length; i ++) {
-    if (classes[i].present) {
-      classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br>" +
-      "<span>" + classes[i].description + "</span></br>" + "<span class='muted'>";
-      if (classes[i].minUnits === classes[i].maxUnits)
-        classesContent += classes[i].minUnits;
-      else
-        classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
-      classesContent += " Units</span><hr class='featurette-divider'>";
+  if (_.values(filterFcns).length > 0) {
+    for (var i = 0; i < classes.length; i ++) {
+      if (classes[i].present) {
+        classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br>" +
+        "<span>" + classes[i].description + "</span></br>" + "<span class='muted'>";
+        if (classes[i].minUnits === classes[i].maxUnits)
+          classesContent += classes[i].minUnits;
+        else
+          classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
+        classesContent += " Units</span><hr class='featurette-divider'>";
+      }
     }
   }
   $("#filteredClasses").empty().html(classesContent);
   hideLoader();
-}
+};
+
+function printCurrentQuery () {
+  var currentQuery = 'Currently querying for ';
+  var queries = [];
+  for (fcn in filterFcns) {
+    var filters = _.values(filterFcns[fcn].filters);
+    if (filters.length > 0)
+      queries.push(filterFcns[fcn].type + _.values(filterFcns[fcn].filters).join(' or '));
+  }
+
+  if (queries.length > 0)
+    currentQuery += 'classes ' + queries.join(' and ') + '.';
+  else
+    currentQuery += 'nothing.';
+
+  $("#currentQuery").html(currentQuery);
+};
 
 /* Create a new copy of the classes list and apply every filter to it. */
 function filterClasses () {
@@ -35,6 +54,7 @@ function filterClasses () {
     filterFcns[x].fcn(classes, filterFcns[x].filters);
   }
   printClasses(classes);
+  printCurrentQuery();
 }
 
 function showLoader() {
@@ -65,6 +85,7 @@ function buildKeywordFilter (id) {
       }
     },
     filters: {},
+    type: 'using the keyword ',
     elemIndex: 0
   };
 }
@@ -81,6 +102,7 @@ function buildSubjectFilter(id) {
       }
     },
     filters: {},
+    type: 'where the subject is ',
     elemIndex: 0
   };
 }
@@ -106,6 +128,7 @@ function buildGERFilter(id) {
       }
     },
     filters: {},
+    type: 'which satisfy the ger ',
     elemIndex: 0
   };
 }
@@ -125,6 +148,7 @@ function buildUnitsFilter (id) {
       }
     },
     filters: {},
+    type: 'which have a unit count of ',
     elemIndex: 0
   };
 }
