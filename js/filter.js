@@ -9,6 +9,8 @@ var filterFcns = {};
 }
 */
 
+// TODO Fix Filter-Elem id's to be classes -- currently only unique within column
+
 function printClasses (classes) {
   var classesContent = "";
   if (_.values(filterFcns).length > 0) {
@@ -40,7 +42,7 @@ function printCurrentQuery () {
   if (queries.length > 0)
     currentQuery += 'classes ' + queries.join(' and ') + '.';
   else
-    currentQuery += 'nothing.';
+    currentQuery += 'nothing. <span class="muted">Click <a href="example.html">here</a> for a sample query.</span>';
 
   $("#currentQuery").html(currentQuery);
 };
@@ -266,21 +268,26 @@ var filterSelectorBuilders = {
   subject: function () {
     var id = buildFilterElem(buildSubjectFilter, buildSubjectSelector);
     populateSelectorDropdown(id, 0, subjectCodes);
+    return id;
   },
   keyword: function () {
     buildFilterElem(buildKeywordFilter, buildKeywordInput);
+    return id;
   },
   gers: function () {
     var id = buildFilterElem(buildGERFilter, buildGERSelector);
     populateSelectorDropdown(id, 0, gers);
+    return id;
   },
   units: function() {
     var id = buildFilterElem(buildUnitsFilter, buildUnitsSelector);
     populateSelectorDropdown(id, 0, units);
+    return id;
   },
   term: function() {
     var id = buildFilterElem(buildTermFilter, buildTermSelector);
     populateSelectorDropdown(id, 0, terms);
+    return id;
   }
 };
 

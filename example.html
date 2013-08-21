@@ -49,6 +49,10 @@
       recalculateWidth();
       printClasses(classes);
       printCurrentQuery();
+      var subjectElemId = filterSelectorBuilders['subject']();
+      $("#" + subjectElemId + " select").val('MATH').change();
+      var termElemId = filterSelectorBuilders['term']();
+      $("#" + termElemId + " select").val('Autumn').change();
     }
   </script>
   <script type="text/javascript" src="js/coursesElem.js"></script>
