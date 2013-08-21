@@ -23,3 +23,5 @@ var gers = ["DB:Hum", "DB:Math", "DB:SocSci", "DB:EngrAppSci", "DB:NatSci", "EC:
   'WAY-ED', 'WAY-ER', 'WAY-FR', 'WAY-SI', 'WAY-SMA'];
 
 var units = ['0', '1', '2', '3', '4', '5', '>5'];
+
+terms = ['Autumn', 'Winter', 'Spring', 'Summer'];

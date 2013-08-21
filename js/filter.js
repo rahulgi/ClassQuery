@@ -151,7 +151,28 @@ function buildUnitsFilter (id) {
     type: 'which have a unit count of ',
     elemIndex: 0
   };
-}
+};
+
+function buildTermFilter (id) {
+  filterFcns[id] = {
+    fcn: function(classes, filters) {
+      for (var i = 0; i < classes.length; ++i) {
+        var matched = false;
+        for (var x in filters) {
+          if (classes[i].termsOffered.indexOf(filters[x]) > -1) {
+            matched = true;
+            break;
+          }
+        }
+        if (!matched)
+          classes[i].present = false;
+      }
+    },
+    filters: {},
+    type: 'in ',
+    elemIndex: 0
+  };
+};
 
 
 function buildSubjectSelector (index) {
@@ -211,6 +232,19 @@ function buildUnitsSelector(index) {
   return toReturn;
 }
 
+function buildTermSelector(index) {
+  var toReturn =
+    '<div class="filter-elem" id="' + index + '">\
+      <button class="close" onClick="onElemRemoved(this);">&times;</button>\
+      <span>Term:</span></br>\
+      <select onChange="onElemValueChanged(this)" class="selector">\
+        <option value=""></option>\
+      </select>\
+      </div></br>\
+    <div class="filter-elem" onClick="buildOrSelector(this, buildTermSelector, terms)">\
+    Add OR Filter</div>';
+  return toReturn;
+}
 
 function buildOrElem (elem, elemBuilder) {
   var parent = $(elem).parent();
@@ -243,6 +277,10 @@ var filterSelectorBuilders = {
   units: function() {
     var id = buildFilterElem(buildUnitsFilter, buildUnitsSelector);
     populateSelectorDropdown(id, 0, units);
+  },
+  term: function() {
+    var id = buildFilterElem(buildTermFilter, buildTermSelector);
+    populateSelectorDropdown(id, 0, terms);
   }
 };
 
