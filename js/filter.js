@@ -16,7 +16,9 @@ function printClasses (classes) {
   if (_.values(filterFcns).length > 0) {
     for (var i = 0; i < classes.length; i ++) {
       if (classes[i].present) {
-        classesContent += "<span><strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></br>" +
+        classesContent += "<span><a target='_blank' href='http://explorecourses.stanford.edu/search?view=catalog&filter-coursestatus-Active=on&page=0&catalog=&academicYear=&q="
+        + classes[i].subject + "+" + classes[i].code + "&collapse='>" +
+        "<strong>" + classes[i].subject + " " + classes[i].code + ":</strong> " + classes[i].title  + "</span></a></br>" +
         "<span>" + classes[i].description + "</span></br>" + "<span class='muted'>";
         if (classes[i].minUnits === classes[i].maxUnits)
           classesContent += classes[i].minUnits;
