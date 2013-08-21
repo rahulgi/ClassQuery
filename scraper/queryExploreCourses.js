@@ -131,6 +131,7 @@ function parse_result (result) {
     newCourse.maxUnits = course['unitsMax'][0];
     newCourse.minUnits = course['unitsMin'][0];
     newCourse.sections = [];
+    newCourse.termsOffered = [];
 
     if (typeof course['gers'][0] === "string")
       newCourse.gers = course['gers'][0].split(', ');
@@ -145,6 +146,11 @@ function parse_result (result) {
 
       var newSection = {};
       newSection.schedules = [];
+
+      newSection.term = parseTerm(section['term'][0]);
+      newCourse.termsOffered.push(newSection.term);
+      newCourse.termsOffered = _.uniq(newCourse.termsOffered);
+      newCourse.termsOffered = _.sortBy(newCourse.termsOffered, termSorter);
 
       var schedules = utils.getArrayOfObjects(section['schedules'][0]['schedule']);
       schedulesCounter += schedules.length;
@@ -212,3 +218,20 @@ function parse_result (result) {
 }
 
 queryForSubject(0);
+
+function parseTerm(term) {
+  return _.last(term.split(' '));
+}
+
+function termSorter(term) {
+  switch(term) {
+    case 'Autumn':
+      return 0;
+    case 'Winter':
+      return 1;
+    case 'Spring':
+      return 2;
+    case 'Summer':
+      return 3;
+  }
+};

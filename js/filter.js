@@ -20,7 +20,7 @@ function printClasses (classes) {
           classesContent += classes[i].minUnits;
         else
           classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
-        classesContent += " Units</span><hr class='featurette-divider'>";
+        classesContent += " Units | " + classes[i].termsOffered.join(', ') + "</span><hr class='featurette-divider'>";
       }
     }
   }
