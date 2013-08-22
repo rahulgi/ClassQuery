@@ -24,7 +24,8 @@ function printClasses (classes) {
           classesContent += classes[i].minUnits;
         else
           classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
-        classesContent += " Units | " + classes[i].termsOffered.join(', ') + "</span><hr class='featurette-divider'>";
+        classesContent += " Units | " + classes[i].termsOffered.join(', ') + "</span></br>";
+        classesContent += "<hr class='featurette-divider'>";
       }
     }
   }
@@ -44,7 +45,7 @@ function printCurrentQuery () {
   if (queries.length > 0)
     currentQuery += 'classes ' + queries.join(' and ') + '.';
   else
-    currentQuery += 'nothing. <span class="muted">Click <a href="example.html">here</a> for a sample query.</span>';
+    currentQuery += 'nothing. <span class="muted">Click <a href="#" onClick="sampleQuery()">here</a> for a sample query.</span>';
 
   $("#currentQuery").html(currentQuery);
 };
@@ -173,7 +174,7 @@ function buildTermFilter (id) {
       }
     },
     filters: {},
-    type: 'in ',
+    type: 'the term is ',
     elemIndex: 0
   };
 };
@@ -357,4 +358,11 @@ function arrayFromObject (obj) {
   for (x in obj)
     toReturn[i++] = obj[x];
   return toReturn;
+}
+
+function sampleQuery () {
+  var subjectElemId = filterSelectorBuilders['subject']();
+  $("#" + subjectElemId + " select").val('MATH').change();
+  var termElemId = filterSelectorBuilders['term']();
+  $("#" + termElemId + " select").val('Autumn').change();
 }
