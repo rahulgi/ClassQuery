@@ -78,12 +78,8 @@ function buildKeywordFilter (id) {
       var regex = new RegExp(arrayFromObject(filters).join("|"), "i");
       for (var i = 0; i < classes.length; i ++) {
         var matched = false;
-        for (x in classes[i]) {
-          if (regex.test(classes[i][x])) {
-            matched = true;
-            break;
-          }
-        }
+        if (regex.test(_.values(classes[i]).join('')) || regex.test(_.values(classes[i]).join(' ')))
+          matched = true;
         if (!matched) {
           classes[i].present = false;
         }
@@ -174,7 +170,7 @@ function buildTermFilter (id) {
       }
     },
     filters: {},
-    type: 'the term is ',
+    type: 'where the term is ',
     elemIndex: 0
   };
 };

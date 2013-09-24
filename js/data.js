@@ -18,8 +18,8 @@ var subjectCodes = [
   'RAD', 'STEMREM', 'SBIO', 'SURG', 'UROL', 'CTL', 'IHUM', 'PWR', 'MLA'
 ];
 
-var gers = ["DB:Hum", "DB:Math", "DB:SocSci", "DB:EngrAppSci", "DB:NatSci", "EC:EthicReas", "EC:GlobalCom",
-  "EC:AmerCul", "EC:Gender", "Language", "Writing 1", "Writing 2", "Writing SLE", 'WAY-All', 'WAY-AQR', 'WAY-CE',
+var gers = ["DB-Hum", "DB-Math", "DB-SocSci", "DB-EngrAppSci", "DB-NatSci", "EC-EthicReas", "EC-GlobalCom",
+  "EC-AmerCul", "EC-Gender", "Language", "Writing 1", "Writing 2", "Writing SLE", 'WAY-All', 'WAY-AQR', 'WAY-CE',
   'WAY-ED', 'WAY-ER', 'WAY-FR', 'WAY-SI', 'WAY-SMA'];
 
 var units = ['0', '1', '2', '3', '4', '5', '>5'];
