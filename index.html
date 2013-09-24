@@ -45,11 +45,21 @@
     </div>
   </div>
   <script type="text/javascript">
+    function recordVisit() {
+      $.ajax({
+        url: 'http://tranquil-lowlands-5473.herokuapp.com/',
+        type: 'POST',
+        data: {
+          "page[base_url]": "ClassQuery"
+        },
+      }).done(function(data) {});
+    };
     function initialize() {
       $('.dropdown-toggle').dropdown();
       recalculateWidth();
       printClasses(classes);
       printCurrentQuery();
+      recordVisit();
     }
   </script>
   <script type="text/javascript" src="js/coursesElem.js"></script>
