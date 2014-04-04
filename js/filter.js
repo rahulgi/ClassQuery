@@ -24,7 +24,10 @@ function printClasses (classes) {
           classesContent += classes[i].minUnits;
         else
           classesContent += classes[i].minUnits + "-" + classes[i].maxUnits;
-        classesContent += " Units | " + classes[i].termsOffered.join(', ') + "</span></br>";
+        classesContent += " Units | " + classes[i].termsOffered.join(', ');
+        if (classes[i]['gers'].join().length > 0) // This is a hack b/c gers never has length 0 for some reason which I'm currently too lazy to investigate
+          classesContent += " | " + classes[i]['gers'].join (', ');
+        classesContent += "</span></br>";
         classesContent += "<hr class='featurette-divider'>";
       }
     }
