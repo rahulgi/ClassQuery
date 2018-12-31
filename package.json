@@ -1,0 +1,15 @@
+{
+  "name": "ClassQuery",
+  "version": "1.0.0",
+  "description": "Interface to query Stanford course offerings.",
+  "repository": "git@github.com:rahulgi/ClassQuery.git",
+  "author": "Rahul Gupta-Iwasaki",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "deploy": "gh-pages -d dist"
+  },
+  "devDependencies": {
+    "gh-pages": "^2.0.1"
+  }
+}
