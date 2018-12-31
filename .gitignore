@@ -1,1 +1,6 @@
 node_modules/
+
+# Data files from scraper.
+scraper/coursesElem.js
+scraper/debugCoursesElem.js
+scraper/skippedCourses.js
